@@ -1,0 +1,54 @@
+# This script builds a randomly connected graph and prints in-degree 
+# distribution, path length and clustering coefficient information.
+# Basically it produces the data used as baseline.
+
+SIZE 10000
+
+CYCLE 1000
+CYCLES 300
+
+random.seed 1234567890
+network.size SIZE
+simulation.endtime CYCLE*CYCLES
+simulation.logtime CYCLE
+
+# the cache size should be set to 30 and to 50.
+CACHESIZE 50
+
+protocol.gossip IdleProtocol
+{
+}
+
+init.wire WireKOut
+{
+	protocol gossip
+	k CACHESIZE
+}
+
+control.avgClustering printer.AverageClusteringPrinter
+{
+	protocol gossip
+	step CYCLE
+	undir true
+	nc 1000
+	type Random
+	cacheSize CACHESIZE
+}
+
+control.avgLength printer.AverageLengthPrinter
+{
+	protocol gossip
+	step CYCLE
+	undir true
+	nl 10
+	type Random
+	cacheSize CACHESIZE
+}
+
+control.degree printer.InDegreePrinter
+{
+	protocol gossip
+	step CYCLE
+	type Random
+	cacheSize CACHESIZE
+}
