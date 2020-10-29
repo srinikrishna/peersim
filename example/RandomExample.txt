@@ -20,7 +20,8 @@ protocol.gossip IdleProtocol
 init.wire WireKOut
 {
 	protocol gossip
-	k 50
+	# The number of outgoing edges to generate from each node, equal to cache size
+	k 30
 }
 
 control.degree example.reports.InDegreeObserver
