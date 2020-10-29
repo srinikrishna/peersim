@@ -11,3 +11,13 @@ You can build the project by simply running `make` or `ant` in the terminal.  Si
 **If the project is build with** `ant` **:**
 
 `java -cp "classes:lib/*" peersim.Simulator <simulation script>`
+
+## Generating graphs ##
+
+We are already given two gnuplot script that works well.
+
+**To generate in-degree distribution graph use the following command:**
+
+`gnuplot plotInDegree.plt -p`
+
+The `-p` flag lets the plot window survive after main gnuplot program exits.
