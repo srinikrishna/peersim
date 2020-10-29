@@ -10,4 +10,4 @@ You can build the project by simply running `make` or `ant` in the terminal.  Si
 
 **If the project is build with** `ant` **:**
 
-`java -cp "src:lib/*" peersim.Simulator <simulation script>`
+`java -cp "classes:lib/*" peersim.Simulator <simulation script>`
