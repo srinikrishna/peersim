@@ -21,7 +21,7 @@ init.wire WireKOut
 {
 	protocol gossip
 	# The number of outgoing edges to generate from each node, equal to cache size
-	k 30
+	k 50
 }
 
 control.degree example.reports.InDegreeObserver
