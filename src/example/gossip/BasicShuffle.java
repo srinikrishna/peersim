@@ -7,7 +7,9 @@ import peersim.cdsim.CDProtocol;
 import peersim.config.Configuration;
 import peersim.core.Linkable;
 import peersim.core.Node;
+import peersim.core.CommonState;
 import peersim.edsim.EDProtocol;
+import peersim.transport.Transport;
 
 
 /**
@@ -44,11 +46,17 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 	// The list of neighbors known by this node, or the cache.
 	private List<Entry> cache;
 	
-	// The maximum size of the cache;
+	// The maximum size of the cache.
 	private final int size;
 	
-	// The maximum length of the shuffle exchange;
+	// The maximum length of the shuffle exchange.
 	private final int l;
+
+    // The status of the node waiting for a response from a shuffling operation.
+    private boolean waiting;
+
+    // The number of entries present in the cache.
+    private int cacheCount;
 	
 	/**
 	 * Constructor that initializes the relevant simulation parameters and
@@ -63,6 +71,8 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 		this.tid = Configuration.getPid(n + "." + PAR_TRANSPORT);
 
 		cache = new ArrayList<Entry>(size);
+        cacheCount = 0;
+        waiting = false;
 	}
 
 	/* START YOUR IMPLEMENTATION FROM HERE
@@ -76,19 +86,51 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 	 */
 	@Override
 	public void nextCycle(Node node, int protocolID) {
-		// Implement the shuffling protocol using the following steps (or
-		// you can design a similar algorithm):
-		// Let's name this node as P
-		
-		// 1. If P is waiting for a response from a shuffling operation initiated in a previous cycle, return;
-		// 2. If P's cache is empty, return;		
-		// 3. Select a random neighbor (named Q) from P's cache to initiate the shuffling;
-		//	  - You should use the simulator's common random source to produce a random number: CommonState.r.nextInt(cache.size())
+		// Implement the shuffling protocol using the following steps (or you can design a similar
+		// algorithm): Let's name this node as P
+
+		// 1. If P is waiting for a response from a shuffling operation initiated in a previous
+		// cycle, return; 2. If P's cache is empty, return;
+        if (waiting || cacheCount == 0) {
+            return;
+        }
+
+		// 3. Select a random neighbor (named Q) from P's cache to initiate the shuffling; - You
+		// should use the simulator's common random source to produce a random number:
+		// CommonState.r.nextInt(cache.size())
+        Entry neighbor = null;
+        int index = 0;
+        while(neighbor == null) {
+            index = CommonState.r.nextInt(cache.size());
+            neighbor = cache.get(index);
+        }
+
 		// 4. If P's cache is full, remove Q from the cache;
-		// 5. Select a subset of other l - 1 random neighbors from P's cache;
+        if (cacheCount == cache.size()) {
+            cache.remove(index);
+            cacheCount--;
+        }
+        
+		// 5. Select a subset of other l-1 random neighbors from P's cache;
 		//	  - l is the length of the shuffle exchange
-		//    - Do not add Q to this subset	
+		//    - Do not add Q to this subset
+        List<Entry> subset = new ArrayList<Entry>(l - 1);
+        int count = 0;
+        int rand = CommonState.r.nextInt(cache.size());
+        // The cache might not have enough nodes to populate the whole subset
+        for (int i = 0; count <= l - 1 || i < cache.size(); i++) {
+            int j = (i + rand) % cache.size();
+            Entry e = cache.get(j);
+            // Checking against object reference should be correct
+            if (e != null && !e.equals(neighbor)) {
+                subset.add(e);
+                count++;
+            }
+        }
+        
 		// 6. Add P to the subset;
+        subset.add(new Entry(node));
+        
 		// 7. Send a shuffle request to Q containing the subset;
 		//	  - Keep track of the nodes sent to Q
 		//	  - Example code for sending a message:
@@ -96,16 +138,21 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 		// GossipMessage message = new GossipMessage(node, subset);
 		// message.setType(MessageType.SHUFFLE_REQUEST);
 		// Transport tr = (Transport) node.getProtocol(tid);
-		// tr.send(node, Q.getNode(), message, protocolID);
-		//
-		// 8. From this point on P is waiting for Q's response and will not initiate a new shuffle operation;
-		//
+        // tr.send(node, Q.getNode(), message, protocolID);
+        GossipMessage message = new GossipMessage(node, subset);
+        message.setType(MessageType.SHUFFLE_REQUEST);
+        Transport tr = (Transport) node.getProtocol(tid);
+        tr.send(node, neighbor.getNode(), message, protocolID);
+        
+		// 8. From this point on P is waiting for Q's response and will not initiate a new shuffle
+		// operation.
+        waiting = true;
+        
 		// The response from Q will be handled by the method processEvent.
-		
 	}
 
-	/* The simulator engine calls the method processEvent at the specific time unit that an event occurs in the simulation.
-	 * It is not called periodically as the nextCycle method.
+	/* The simulator engine calls the method processEvent at the specific time unit that an event
+	 * occurs in the simulation.  It is not called periodically as the nextCycle method.
 	 * 
 	 * You should implement the handling of the messages received by this node in this method.
 	 * 
