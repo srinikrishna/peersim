@@ -148,7 +148,6 @@ public static int getSimID() {
 */
 public static void main(String[] args)
 {
-    System.out.println("HEROOOOOOOO");
 	long time = System.currentTimeMillis();	
 	
 	System.err.println("Simulator: loading configuration");
