@@ -6,6 +6,12 @@ SIZE 10000
 CYCLE 1000
 CYCLES 300
 
+# SIZE 10
+
+# CYCLE 1000
+# CYCLES 20
+
+
 MINDELAY 10
 MAXDELAY 60
 
@@ -23,7 +29,7 @@ protocol.tr UniformRandomTransport
 protocol.gossip example.gossip.BasicShuffle
 {
 	# the cache size should be set to 30 and to 50.
-	cacheSize 30
+	cacheSize 50
 	shuffleLength 8
 
 	step CYCLE
@@ -31,13 +37,13 @@ protocol.gossip example.gossip.BasicShuffle
 	period CYCLE
 }
 
-init.wire WireStar
-{
-	protocol gossip
-}
+# This initializes the topology as a star.
+# init.wire WireStar
+# {
+# 	protocol gossip
+# }
 
-# This initializes the topology as a ring. Use should also use WireStar to
-# initialize it as a star.
+# This initializes the topology as a ring. 
 init.wire WireRingLattice
 {
 	protocol gossip
@@ -64,7 +70,7 @@ control.graphPL GraphStats
 	step CYCLE
 	undir true
 	# nl will produce path length information
-	nl 10
+	# nl 10
 	# uncomment the next line to produce clustering information
-	#nc 1000
+	nc 1000
 }
