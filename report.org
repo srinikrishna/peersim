@@ -1,0 +1,29 @@
+#+TITLE: Report from PeerSim simulations
+#+AUTHOR: Dan Rachou (danra), Srinivas Krishna (srinivk), Nemanja Lakicevic (nemanjla)
+#+OPTIONS: toc:nil
+#+LATEX: \newpage
+
+*  Which topology do you think is better to bootstrap such a P2P system?
+
+  The neighbor exchanges in the ring topology is clearly faster to run in the simulation than in the
+  star topology.  When bootstrapping the star topology, the simulation starts with every node
+  linking to the same node.  The center node does not have any out links, forcing the neighbor
+  exchange to begin from the center node, leading the node to immediately be overloaded with shuffle
+  requests from the other nodes.  In our case, this single node has to reject 9999 shuffle requests
+  while waiting for a shuffle reply.  In the ring topology, every node has one out link and there is
+  a communication path between every node.  The longest path between two nodes are 9999 hops, and
+  the shortest is 1 hop.  At the beginning of the simulation, the average path length is $9999! \div
+  1000$.  The shuffle requests are therefore distributed in the network and not overloading a single
+  node, speeding up the neighbor exchanges within the overlay network.
+    
+* What is the importance of the cache size?
+  
+  There are tradeoffs between the two cache sizes.  The average path length in the overlay network
+  is less when the cache size is 50, however, the cluster coefficient hits a stable baseline after
+  more cycles have passed, and the baseline is also higher compared to when the cache size is 30.
+  The degree distribution is also less when the cache size is 50.
+
+  To summarize, a cache size of 50 nodes results in an overlay network that has slightly lower
+  communication costs and transfer speeds, but at a higher risk of network partitioning and higher
+  number of redundant message deliveries.  The network is also less distributed, moving it closer to
+  a decentralised network instead of a distributed one.
