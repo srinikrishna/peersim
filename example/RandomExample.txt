@@ -21,7 +21,7 @@ init.wire WireKOut
 {
 	protocol gossip
 	# The number of outgoing edges to generate from each node, equal to cache size
-	k 50
+	k 30
 }
 
 control.degree example.reports.InDegreeObserver
@@ -38,6 +38,6 @@ control.graphPL GraphStats
 	protocol gossip
 	step CYCLE
 	undir true
-	#nl 10
-	nc 1000
+	nl 10
+	# nc 1000
 }

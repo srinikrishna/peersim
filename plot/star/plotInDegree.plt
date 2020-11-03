@@ -2,7 +2,7 @@
 #set terminal png enhanced
 #set output 'idd.png'
 
-set title "In-degree distribution"
+set title "In-degree distribution (star)"
 set xlabel "in-degree"
 set ylabel "number of nodes"
 set key right top

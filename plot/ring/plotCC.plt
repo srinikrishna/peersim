@@ -2,7 +2,7 @@
 #set terminal png enhanced
 #set output 'plot.png'
 
-set title "Average Clustering Coefficient"
+set title "Average Clustering Coefficient (ring)"
 set xlabel "cycles"
 set ylabel "clustering coefficient (log)"
 set key right top

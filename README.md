@@ -22,7 +22,7 @@ The simulation will output the *Average Path Length* if the `nl` property in `Gr
 
 **The following command will extract the data from either the *Average Path Length* or the *Average Clustering Coefficient*:**
 
-`java -cp "classes:lib/*" peersim.Simulator example/<plot script> | grep -Eo "[0-]+\.[0-9]+" > plot/<output file>`
+`java -cp "classes:lib/*" peersim.Simulator example/<plot script> | grep -Eo "[0-9]+\.[0-9]+" > plot/<output file>`
 
 **This command will extract *In-degree Distribution* from the output of the simulation:**
 
