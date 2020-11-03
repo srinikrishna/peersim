@@ -56,7 +56,8 @@ control.graphPL GraphStats
 	protocol gossip
 	step CYCLE
 	undir true
-	# nl will produce path length information (value 10)
-	# nc will produce clustering information (value 1000)
+	# nl will produce path length information, values greater than 1
+	nl 10
+	# nc will produce clustering coefficient information, values less than 1
 	nc 1000
 }

@@ -1,32 +1,51 @@
 # Gossiping with PeerSim
 
-Every command in run in the root folder of the project if nothing else is specified.
+Every command is run in the root folder of the project if nothing else is specified.
 
-## Building and running ##
+## Building and runing with `make` ##
 
-You can build the project by simply running `make` or `ant` in the terminal.  Similarly to clean the project of class files, run `make clean` or `ant clean`.
+You can build the project by simply running `make` in the terminal.  Similarly to clean the project of class files, run `make clean`.
 
-**If the project is built with** `make` **:**
+**Run the program with the following command:**
 
 `java -cp "src:lib/*" peersim.Simulator <simulation script>`
 
-**If the project is build with** `ant` **:**
+## Building and running with `ant` ##
+
+You can build the project by simply running `ant` in the terminal.  Similarly to clean the project of class files, run `ant clean`.
+
+**Run tthe program with the following command:**
 
 `java -cp "classes:lib/*" peersim.Simulator <simulation script>`
 
 ## Collecting data from output ##
+We only need data for one axis, i.e the y-axis, which means that there will only be a single column in the data files.
 
-We only need data for one axis, i.e the x-axis, which means that there will only be a single column in the data files.
+The simulation will output the *Average Path Length* if the `nl` property in `GraphStats` is set, and *Average Clustering Coefficient* if the `nc` property is set.  The properties are set in the simulation script.  If both properties are set, then value of `nc` printed out before `nl` value.
 
-The simulation will output the *Average Path Length* if the `nl` property in `GraphStats` is set in the simulation script. If you wish to output the *Average Clustering Coefficient* instead, comment out the `nl` property, and set the `nc` property. It is important that only *one* of these properties are set at a time.
+Remember to set the cache size you want in the simulation script, `example/Shuffle<topology>Example.txt`, before running the program.
 
-**The following command will extract the data from either the *Average Path Length* or the *Average Clustering Coefficient*:**
+**We can filter the output of the values of the *Average Path Length*, *Average Clustering Coefficient* and *In-Degree distribution* into a temporary file with the following command:**
 
-`java -cp "classes:lib/*" peersim.Simulator example/<plot script> | grep -Eo "[0-9]+\.[0-9]+" > plot/<output file>`
+`java -cp "classes:lib/*" peersim.Simulator example/<plot script> | grep -Eo "[0-9]+\.[0-9]+|[0-9]{1,}" > plot/<topology>/temp.txt`
 
-**This command will extract *In-degree Distribution* from the output of the simulation:**
+This example assumes you have built the project with `ant`. 
 
-`java -cp "classes:lib/*" peersim.Simulator example/<plot script> | grep -Ev "\." | grep -Eo "[0-9]{1,}" > plot/<output file>`
+**We further filter the temporary file into three separate data files:**
+
+```bash
+grep -Eo "[0-9]+\.[0-9]+" plot/<topology>/temp.txt | sed 'n; d' > plot/<topology>/cc<cache size>.txt
+grep -Eo "[0-9]+\.[0-9]+" plot/<topology>/temp.txt | sed '1d; n; d' > plot/<topology>/apl<cache size>.txt
+grep -Ev "[0-9]+\.[0-9]+" plot/<topology>/temp.txt > plot/<topology>/dd<cache size>.txt
+```
+
+To make it even easier to collect all the data (both cache sizes) for a specific topology, we have the following scripts: `collect_star` and `collect_ring`.
+
+**If you are unable to run the script, make sure the file is executable in your system:**
+
+```bash
+chmod +x <script>
+```
 
 ## Generating graphs ##
 

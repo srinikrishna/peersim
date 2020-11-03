@@ -39,5 +39,5 @@ control.graphPL GraphStats
 	step CYCLE
 	undir true
 	nl 10
-	# nc 1000
+	nc 1000
 }

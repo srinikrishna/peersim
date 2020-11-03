@@ -58,13 +58,14 @@ control.degree example.reports.InDegreeObserver
 	endtime 300000
 }
 
+# ouput will be 'nc nl'
 control.graphPL GraphStats
 {
 	protocol gossip
 	step CYCLE
 	undir true
-	# nl will produce path length information
-	# nl 10
-	# uncomment the next line to produce clustering information
+	# nl will produce path length information, values greater than 1
+	nl 10
+	# nc will produce clustering coefficient information, values less than 1
 	nc 1000
 }
