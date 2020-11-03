@@ -1,6 +1,6 @@
 # You can uncomment the following lines to produce a png figure
-#set terminal png enhanced
-#set output 'plot.png'
+set terminal png enhanced
+set output 'ccPlot.png'
 
 set title "Average Clustering Coefficient (ring)"
 set xlabel "cycles"

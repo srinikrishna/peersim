@@ -1,6 +1,6 @@
 # You can uncomment the following lines to produce a png figure
-#set terminal png enhanced
-#set output 'plot.png'
+set terminal png enhanced
+set output 'aplPlot.png'
 
 set title "Average Path Length (ring)"
 set xlabel "cycles"

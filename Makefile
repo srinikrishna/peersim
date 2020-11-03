@@ -67,3 +67,15 @@ release: clean all docnew
 	mv peersim-$(VER).jar peersim-$(VER)
 	cp jep-2.3.0.jar peersim-$(VER)
 	cp djep-1.0.0.jar peersim-$(VER)
+
+tar:	clean
+	mkdir danra-srinivk-nemanjla/
+	mkdir -p danra-srinivk-nemanjla/scripts
+	mkdir -p danra-srinivk-nemanjla/src
+	mkdir -p danra-srinivk-nemanjla/plot
+	cp src/example/gossip/* danra-srinivk-nemanjla/src/
+	cp -r plot/* danra-srinivk-nemanjla/plot/
+	cp README.md report.pdf collect* danra-srinivk-nemanjla/
+	cp example/Shuffle* danra-srinivk-nemanjla/scripts
+	tar -cvzf danra-srinivk-nemanjla.tar.gz danra-srinivk-nemanjla
+	rm -rf danra-srinivk-nemanjla

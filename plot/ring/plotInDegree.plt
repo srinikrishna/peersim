@@ -1,6 +1,6 @@
 # Uncomment to create file:
-#set terminal png enhanced
-#set output 'idd.png'
+set terminal png enhanced
+set output 'ddPlot.png'
 
 set title "In-degree distribution (ring)"
 set xlabel "in-degree"
