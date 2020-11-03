@@ -52,6 +52,9 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
     // The subset of the cache that has been sent to a neighbor node.
     private List<Entry> subset;
 
+    // Turns on/off debugging printing.
+    private boolean debug = false;
+    
 	/**
 	 * Constructor that initializes the relevant simulation parameters and other class variables.
 	 * 
@@ -78,8 +81,10 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 	 */
 	@Override
 	public void nextCycle(Node node, int protocolID) {
-        // DEBUG
-        // System.out.println("nextCycle: Node " + node.getID() + " has cache:" + listToString(cache));
+        if (debug) {
+            System.out.println("nextCycle: Node " + node.getID() + " has cache:" +
+                               listToString(cache));
+        }
 
 		// Let's name this node as P.
 		// 1. If P is waiting for a response from a shuffling operation initiated in a previous
@@ -132,9 +137,10 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
         Transport tr = (Transport) node.getProtocol(tid);
         tr.send(node, neighbor.getNode(), message, protocolID);
 
-        // DEBUG
-        // System.out.println("nextCycle: Node " + node.getID() + " sends subset " +
-        //                    listToString(subset) + " to node " + neighbor.getNode().getID());
+        if (debug) {
+            System.out.println("nextCycle: Node " + node.getID() + " sends subset " +
+                               listToString(subset) + " to node " + neighbor.getNode().getID());
+        }
         
 		// 8. From this point on P is waiting for Q's response and will not initiate a new shuffle
 		// operation.
@@ -166,9 +172,11 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
                 Transport tr = (Transport) node.getProtocol(tid);
                 tr.send(node, message.getNode(), response, pid);
 
-                // DEBUG
-                // System.out.println("processEvent: Node " + node.getID()
-                //                    + " rejects shuffle request from node " + message.getNode().getID());
+                if (debug) {
+                    System.out.println("processEvent: Node " + node.getID()
+                                       + " rejects shuffle request from node " +
+                                       message.getNode().getID());
+                }
             }
             else {
                 // 2. Q selects a random subset size l of its own neighbors;
@@ -180,9 +188,11 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
                 Transport tr = (Transport) node.getProtocol(tid);
                 tr.send(node, message.getNode(), response, pid);
 
-                // DEBUG
-                // System.out.println("processEvent: Node " + node.getID() + " replies to " +
-                //                    message.getNode().getID() + " with subset" + listToString(subset));
+                if (debug) {
+                    System.out.println("processEvent: Node " + node.getID() + " replies to " +
+                                       message.getNode().getID() + " with subset" +
+                                       listToString(subset));
+                }
 
                 // 4. Q updates its cache to include the neighbors sent by P;
                 List<Entry> shuffleList = message.getShuffleList();
@@ -193,10 +203,11 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 			break;
 		
 		case SHUFFLE_REPLY:
-            // DEBUG
-            // System.out.println("processEvent: Node " + node.getID() + " received shuffle set "
-            //                    + listToString(message.getShuffleList()) + " from node "
-            //                    + message.getNode().getID());
+            if (debug) {
+                System.out.println("processEvent: Node " + node.getID() + " received shuffle set "
+                                   + listToString(message.getShuffleList()) + " from node "
+                                   + message.getNode().getID());
+            }
             // In this case Q initiated a shuffle with P and is receiving a response containing a
             // subset of P's neighbors.
             //  1. Q updates its cache to include the neighbors sent by P;
@@ -225,6 +236,10 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 	}
     
     private List<Entry> getSubsetFromCache(int size) {
+        if (cache.size() == 0) {
+            return new ArrayList<Entry>();
+        }
+        
         List<Entry> lst = new ArrayList<Entry>();
         int rand = CommonState.r.nextInt(cache.size());
         // The cache might not have enough nodes to populate the whole subset
@@ -281,11 +296,18 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
     }
 
     private String listToString(List<Entry> list) {
+        if (list.size() == 0) {
+            return "{}";
+        }
+        
         String str = "{";
+
         for (int i = 0; i < list.size() - 1; i++) {
             str += list.get(i).getNode().getID() + ", ";
         }
+        
         str += list.get(list.size() - 1).getNode().getID() + "}";
+        
         return str;
     }
     /* The following methods are used only by the simulator and don't need to be changed */
