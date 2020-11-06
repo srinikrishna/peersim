@@ -235,7 +235,9 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
 		
 		case SHUFFLE_REJECTED:
             // 1. If P was originally removed from Q's cache, add it again to the cache.
-            updateCache(message.getNode(), node.getID(), message.getNode().getID());
+            if (!inCache(message.getNode())) {
+                updateCache(message.getNode(), node.getID(), message.getNode().getID());                
+            }
             // reset entries sent to P;
             for (Entry entry : cache) {
                 Node n = entry.getSentTo();
