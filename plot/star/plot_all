@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+gnuplot plotAPL.plt
+gnuplot plotCC.plt
+gnuplot plotInDegree.plt
+
+open *.png
+
+echo "done"
