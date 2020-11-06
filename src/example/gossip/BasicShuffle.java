@@ -170,7 +170,7 @@ public class BasicShuffle  implements Linkable, EDProtocol, CDProtocol{
                 // 2. Q selects a random subset size l of its own neighbors;
                 List<Entry> subset = new ArrayList<>(l);
                 int count = 0;
-                int r = CommonState.r.nextInt(cache.size());
+                int r = (cache.isEmpty()) ? 0 : CommonState.r.nextInt(cache.size());
                 for (int i = 0; count <= l && i < cache.size(); i++) {
                     int j = (i + r) % cache.size();
                     Entry entry = cache.get(j);

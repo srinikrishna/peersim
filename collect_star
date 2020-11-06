@@ -10,8 +10,9 @@ echo "### STAR TOPOLOGY ###"
 echo "Collecting clustering coefficient, path length and in-degree distribution information:"
 echo "cache size 30..."
 
-java -cp "classes:lib/*" peersim.Simulator example/ShuffleStarExample.txt | grep -Eo "[0-9]+\.[0-9]+|[0-9]{1,}" > plot/star/temp.txt
+java -cp "classes:lib/*" peersim.Simulator example/ShuffleStarExample.txt > plot/star/output30.txt
 
+grep -Eo "[0-9]+\.[0-9]+|[0-9]{1,}" plot/star/output30.txt > plot/star/temp.txt
 grep -Eo "[0-9]+\.[0-9]+" plot/star/temp.txt | sed 'n; d' > plot/star/cc30.txt
 grep -Eo "[0-9]+\.[0-9]+" plot/star/temp.txt | sed '1d; n; d' > plot/star/apl30.txt
 grep -Ev "[0-9]+\.[0-9]+" plot/star/temp.txt > plot/star/dd30.txt
@@ -20,8 +21,9 @@ sed -i '' 's/cacheSize 30/cacheSize 50/' example/ShuffleStarExample.txt
 
 echo "cache size 50..."
 
-java -cp "classes:lib/*" peersim.Simulator example/ShuffleStarExample.txt | grep -Eo "[0-9]+\.[0-9]+|[0-9]{1,}" > plot/star/temp.txt
+java -cp "classes:lib/*" peersim.Simulator example/ShuffleStarExample.txt > plot/star/output50.txt
 
+grep -Eo "[0-9]+\.[0-9]+|[0-9]{1,}" plot/star/output50.txt > plot/star/temp.txt
 grep -Eo "[0-9]+\.[0-9]+" plot/star/temp.txt | sed 'n; d' > plot/star/cc50.txt
 grep -Eo "[0-9]+\.[0-9]+" plot/star/temp.txt | sed '1d; n; d' > plot/star/apl50.txt
 grep -Ev "[0-9]+\.[0-9]+" plot/star/temp.txt > plot/star/dd50.txt
