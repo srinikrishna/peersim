@@ -10,8 +10,9 @@ echo "### RING TOPOLOGY ###"
 echo "Collecting clustering coefficient, path length and in-degree distribution information:"
 echo "cache size 30..."
 
-java -cp "classes:lib/*" peersim.Simulator example/ShuffleRingExample.txt | grep -Eo "[0-9]+\.[0-9]+|[0-9]{1,}" > plot/ring/temp.txt
+java -cp "classes:lib/*" peersim.Simulator example/ShuffleRingExample.txt > plot/ring/all.txt
 
+grep -Eo "[0-9]+\.[0-9]+|[0-9]{1,}" plot/ring/all.txt > plot/ring/temp.txt
 grep -Eo "[0-9]+\.[0-9]+" plot/ring/temp.txt | sed 'n; d' > plot/ring/cc30.txt
 grep -Eo "[0-9]+\.[0-9]+" plot/ring/temp.txt | sed '1d; n; d' > plot/ring/apl30.txt
 grep -Ev "[0-9]+\.[0-9]+" plot/ring/temp.txt > plot/ring/dd30.txt
